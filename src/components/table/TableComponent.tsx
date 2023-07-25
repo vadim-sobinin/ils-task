@@ -16,6 +16,7 @@ import {
   setSelectedRowKeys,
 } from "../../redux/dataSlice"
 import { CoordinatesInput } from "./CoordinatesInput"
+import { LatLngTuple } from "leaflet"
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null)
 
@@ -113,9 +114,9 @@ type EditableTableProps = Parameters<typeof Table>[0]
 export interface DataType {
   key: React.Key
   route: string
-  point1: number[]
-  point2: number[]
-  point3: number[]
+  point1: LatLngTuple
+  point2: LatLngTuple
+  point3: LatLngTuple
 }
 
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>

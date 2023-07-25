@@ -7,6 +7,7 @@ import {
 import { RootState, AppThunk } from "./store"
 import { DataType } from "../components/table/TableComponent"
 import { Key } from "react"
+import { LatLngTuple } from "leaflet"
 
 export interface DataState {
   dataSource: DataType[]
@@ -20,7 +21,7 @@ const initialState: DataState = {
     {
       key: "0",
       route: "Маршрут №1",
-      point1: [59.84660399, 30.29496392],
+      point1: [59.8382605045259, 30.30664443969727],
       point2: [59.82934196, 30.42423701],
       point3: [59.83567701, 30.38064206],
     },
@@ -65,9 +66,9 @@ export const dataSlice = createSlice({
       const newData: DataType = {
         key: String(payload),
         route: `Маршрут №${payload + 1}`,
-        point1: [],
-        point2: [],
-        point3: [],
+        point1: [0, 0],
+        point2: [0, 0],
+        point3: [0, 0],
       }
       state.dataSource = [...state.dataSource, newData]
     },
@@ -95,7 +96,7 @@ export const dataSlice = createSlice({
       }: PayloadAction<{
         key: Key
         point: "point1" | "point2" | "point3"
-        coords: number[]
+        coords: LatLngTuple
       }>,
     ) => {
       state.dataSource[state.dataSource.findIndex((elem) => elem.key === key)][
