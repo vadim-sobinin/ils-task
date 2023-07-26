@@ -1,7 +1,7 @@
 import "../../scss/Map.scss"
 import "leaflet/dist/leaflet.css"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import {
   MapContainer,
   Marker,
@@ -10,27 +10,25 @@ import {
   TileLayer,
   useMap,
 } from "react-leaflet"
-import { useAppSelector } from "../../hooks/hooks"
-import { selectData } from "../../redux/dataSlice"
-import { LatLngExpression, LatLngTuple } from "leaflet"
-import { getRouteFromAPI } from "../../servises/osrm"
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
+import { getAPIRoute, selectData } from "../../redux/dataSlice"
+import { LatLngTuple } from "leaflet"
 
 const Map = () => {
-  const { dataSource, selectedRoute } = useAppSelector(selectData)
+  const { dataSource, selectedRoute, routeCoords, status } =
+    useAppSelector(selectData)
 
-  const [pathCoordsArr, setPathCoordsArr] = useState<LatLngExpression[][]>([])
+  const dispatch = useAppDispatch()
 
   const getCoords = async () => {
     if (selectedRoute) {
-      const coordsLeg1 = await getRouteFromAPI([
-        selectedRoute.point1,
-        selectedRoute.point2,
-      ])
-      const coordsLeg2 = await getRouteFromAPI([
-        selectedRoute.point2,
-        selectedRoute.point3,
-      ])
-      setPathCoordsArr([coordsLeg1, coordsLeg2])
+      dispatch(
+        // @ts-ignore
+        getAPIRoute([
+          [selectedRoute.point1, selectedRoute.point2],
+          [selectedRoute.point2, selectedRoute.point3],
+        ]),
+      )
     }
   }
 
@@ -77,16 +75,13 @@ const Map = () => {
           </Marker>
         </>
       )}
-      {pathCoordsArr[0] && pathCoordsArr[0] && (
+      {status === "idle" && routeCoords[0] && routeCoords[0] && (
         <>
           <Polyline
-            positions={pathCoordsArr[0]}
+            positions={routeCoords[0]}
             pathOptions={{ color: "blue" }}
           />
-          <Polyline
-            positions={pathCoordsArr[1]}
-            pathOptions={{ color: "red" }}
-          />
+          <Polyline positions={routeCoords[1]} pathOptions={{ color: "red" }} />
         </>
       )}
       <ResetCenterView />

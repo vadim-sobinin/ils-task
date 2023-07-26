@@ -24,6 +24,5 @@ export async function getRouteFromAPI(coordinates: LatLngTuple[]) {
   const reversedCoords = response.data.routes[0].geometry.coordinates.map(
     (coords: any) => [coords[1], coords[0]],
   )
-  // console.log(reversedCoords)
   return reversedCoords
 }

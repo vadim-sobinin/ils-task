@@ -4,7 +4,7 @@ import {
   current,
   PayloadAction,
 } from "@reduxjs/toolkit"
-import { RootState, AppThunk } from "./store"
+import { RootState } from "./store"
 import { DataType } from "../components/table/TableComponent"
 import { Key } from "react"
 import { LatLngTuple } from "leaflet"
@@ -14,6 +14,7 @@ export interface DataState {
   selectedRowKeys: Key[]
   status: "idle" | "loading" | "failed"
   selectedRoute: DataType | null
+  routeCoords: LatLngTuple[][]
 }
 
 const initialState: DataState = {
@@ -43,6 +44,7 @@ const initialState: DataState = {
   selectedRowKeys: [],
   status: "idle",
   selectedRoute: null,
+  routeCoords: [],
 }
 
 // export const incrementAsync = createAsyncThunk(
@@ -107,6 +109,13 @@ export const dataSlice = createSlice({
         state.selectedRoute[point] = coords
       }
     },
+    getAPIRoute(state) {
+      state.status = "loading"
+    },
+    setAPIRoute(state, { payload }: PayloadAction<LatLngTuple[][]>) {
+      state.routeCoords = payload
+      state.status = "idle"
+    },
   },
 
   // extraReducers: (builder) => {
@@ -130,6 +139,8 @@ export const {
   saveRoute,
   setSelectedRowKeys,
   updateCoords,
+  getAPIRoute,
+  setAPIRoute,
 } = dataSlice.actions
 
 export const selectData = (state: RootState) => state.data
