@@ -1,9 +1,7 @@
 import axios from "axios"
 import { LatLngTuple } from "leaflet"
 
-//`http://router.project-osrm.org/route/v1/car/59.84660399,30.29496392;59.82934196,30.42423701?overview=full&geometries=geojson`
-
-const API_ROOT = "https://routing.openstreetmap.de/routed-car/route/v1/driving/"
+const API_ROOT = "https://router.project-osrm.org/route/v1/driving/"
 
 // Function to generate OSRM API URL
 function generateOSRMApiUrl(coordinates: LatLngTuple[]) {
@@ -13,10 +11,8 @@ function generateOSRMApiUrl(coordinates: LatLngTuple[]) {
       return [coord[1], coord[0]].join(",")
     })
     .join(";")
-  console.log(
-    `${API_ROOT}${coordinatesString}?overview=false&alternatives=true&steps=true`,
-  )
-  return `${API_ROOT}${coordinatesString}?overview=false&alternatives=true&steps=true`
+
+  return `${API_ROOT}${coordinatesString}?overview=full&geometries=geojson`
 }
 
 export async function getRouteFromAPI(coordinates: LatLngTuple[]) {
@@ -25,14 +21,9 @@ export async function getRouteFromAPI(coordinates: LatLngTuple[]) {
   if (response.data.code !== "Ok") {
     throw new Error("Failed to get route from OSRM")
   }
-
-  const coordsLegs = response.data.routes[0].legs
-  const coordsArray: any[] = []
-  coordsLegs.forEach((leg: any) =>
-    leg.steps.map((point: any) =>
-      coordsArray.push(point.maneuver.location.reverse()),
-    ),
+  const reversedCoords = response.data.routes[0].geometry.coordinates.map(
+    (coords: any) => [coords[1], coords[0]],
   )
-  console.log(response.data)
-  return coordsArray
+  // console.log(reversedCoords)
+  return reversedCoords
 }

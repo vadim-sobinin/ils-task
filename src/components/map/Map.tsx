@@ -5,28 +5,34 @@ import { selectData } from "../../redux/dataSlice"
 
 import "../../scss/Map.scss"
 import "leaflet/dist/leaflet.css"
-import { LatLngExpression } from "leaflet"
+import { LatLngExpression, LatLngTuple } from "leaflet"
 import { getRouteFromAPI } from "../../servises/osrm"
 
 const Map = () => {
   const { dataSource, selectedRoute } = useAppSelector(selectData)
-  const coords = [
-    dataSource[0].point1,
-    dataSource[0].point2,
-    dataSource[0].point3,
-  ]
 
-  const [points, setPoints] = useState<LatLngExpression[]>([])
+  const [pathCoordsArr, setPathCoordsArr] = useState<LatLngExpression[][]>([])
 
   const getCoords = async () => {
-    const apiRoutPoints = await getRouteFromAPI(coords)
-    console.log(apiRoutPoints)
-    setPoints(apiRoutPoints)
+    if (selectedRoute) {
+      const coordsLeg1 = await getRouteFromAPI([
+        selectedRoute.point1,
+        selectedRoute.point2,
+      ])
+      const coordsLeg2 = await getRouteFromAPI([
+        selectedRoute.point2,
+        selectedRoute.point3,
+      ])
+      // console.log([coordsLeg1, coordsLeg2])
+      setPathCoordsArr([coordsLeg1, coordsLeg2])
+    }
   }
 
   useEffect(() => {
-    getCoords()
-  }, [])
+    if (selectedRoute) {
+      getCoords()
+    }
+  }, [selectedRoute])
 
   return (
     <MapContainer
@@ -38,8 +44,31 @@ const Map = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-
-      {points && <Polyline positions={points} />}
+      {selectedRoute && (
+        <>
+          <Marker position={selectedRoute.point1}>
+            <Popup>Первая метка</Popup>
+          </Marker>
+          <Marker position={selectedRoute.point2}>
+            <Popup>Вторая метка</Popup>
+          </Marker>
+          <Marker position={selectedRoute.point3}>
+            <Popup>Третья метка</Popup>
+          </Marker>
+        </>
+      )}
+      {selectedRoute && pathCoordsArr && (
+        <>
+          <Polyline
+            positions={pathCoordsArr[0]}
+            pathOptions={{ color: "blue" }}
+          />
+          <Polyline
+            positions={pathCoordsArr[1]}
+            pathOptions={{ color: "red" }}
+          />
+        </>
+      )}
     </MapContainer>
   )
 }
