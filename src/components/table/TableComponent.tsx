@@ -241,15 +241,6 @@ export const TableComponent: React.FC = () => {
         rowSelection={rowSelection}
         dataSource={dataSource}
         columns={columns as ColumnTypes}
-        onRow={(record) => ({
-          onClick: () => {
-            if (selectedRowKeys[0] === record.key) {
-              dispatch(setSelectedRowKeys([]))
-            } else {
-              dispatch(setSelectedRowKeys([record.key]))
-            }
-          },
-        })}
       />
       <Button className="table-btn" onClick={handleAdd} type="primary">
         Добавить маршрут

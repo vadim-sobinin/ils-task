@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from "react"
-import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet"
-import { useAppSelector } from "../../hooks/hooks"
-import { selectData } from "../../redux/dataSlice"
-
 import "../../scss/Map.scss"
 import "leaflet/dist/leaflet.css"
+
+import React, { useEffect, useState } from "react"
+import {
+  MapContainer,
+  Marker,
+  Polyline,
+  Popup,
+  TileLayer,
+  useMap,
+} from "react-leaflet"
+import { useAppSelector } from "../../hooks/hooks"
+import { selectData } from "../../redux/dataSlice"
 import { LatLngExpression, LatLngTuple } from "leaflet"
 import { getRouteFromAPI } from "../../servises/osrm"
 
@@ -23,7 +30,6 @@ const Map = () => {
         selectedRoute.point2,
         selectedRoute.point3,
       ])
-      // console.log([coordsLeg1, coordsLeg2])
       setPathCoordsArr([coordsLeg1, coordsLeg2])
     }
   }
@@ -34,9 +40,23 @@ const Map = () => {
     }
   }, [selectedRoute])
 
+  let mapCenterCoords: LatLngTuple | undefined = undefined
+
+  function ResetCenterView() {
+    const map = useMap()
+
+    selectedRoute &&
+      map.fitBounds([
+        selectedRoute?.point1,
+        selectedRoute?.point2,
+        selectedRoute.point3,
+      ])
+    return null
+  }
+
   return (
     <MapContainer
-      center={dataSource[0].point1}
+      center={mapCenterCoords ? mapCenterCoords : dataSource[0].point1}
       zoom={13}
       scrollWheelZoom={false}
     >
@@ -57,7 +77,7 @@ const Map = () => {
           </Marker>
         </>
       )}
-      {selectedRoute && pathCoordsArr && (
+      {pathCoordsArr[0] && pathCoordsArr[0] && (
         <>
           <Polyline
             positions={pathCoordsArr[0]}
@@ -69,6 +89,7 @@ const Map = () => {
           />
         </>
       )}
+      <ResetCenterView />
     </MapContainer>
   )
 }
