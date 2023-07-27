@@ -1,9 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  current,
-  PayloadAction,
-} from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "./store"
 import { DataType } from "../components/table/TableComponent"
 import { Key } from "react"
