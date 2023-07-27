@@ -1,5 +1,6 @@
 import "../../scss/Map.scss"
 import "leaflet/dist/leaflet.css"
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css"
 
 import React, { useEffect } from "react"
 import {
@@ -14,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
 import { getAPIRoute, selectData } from "../../redux/dataSlice"
 import { LatLngTuple } from "leaflet"
 import ClipLoader from "react-spinners/ClipLoader"
+import "leaflet-defaulticon-compatibility"
 
 const Map = () => {
   const { dataSource, selectedRoute, routeCoords, status } =
