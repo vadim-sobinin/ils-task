@@ -1,5 +1,4 @@
 import "../../scss/Map.scss"
-import "leaflet/dist/leaflet.css"
 
 import React, { useEffect } from "react"
 import {
@@ -10,10 +9,24 @@ import {
   TileLayer,
   useMap,
 } from "react-leaflet"
+import "leaflet/dist/leaflet.css"
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
 import { getAPIRoute, selectData } from "../../redux/dataSlice"
 import { LatLngTuple } from "leaflet"
 import ClipLoader from "react-spinners/ClipLoader"
+import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png"
+import iconUrl from "leaflet/dist/images/marker-icon.png"
+import shadowUrl from "leaflet/dist/images/marker-shadow.png"
+import L from "leaflet"
+
+// @ts-ignore
+delete L.Icon.Default.prototype._getIconUrl
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: iconRetinaUrl,
+  iconUrl: iconUrl,
+  shadowUrl: shadowUrl,
+})
 
 const Map = () => {
   const { dataSource, selectedRoute, routeCoords, status } =
