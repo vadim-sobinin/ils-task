@@ -25,13 +25,24 @@ export const CoordinatesInput: React.FC<InputProps> = ({
     setState: React.Dispatch<React.SetStateAction<string>>,
   ) => {
     setState(number)
-    dispatch(
-      updateCoords({
-        key: record.key,
-        point: point,
-        coords: [Number(value1), Number(value2)],
-      }),
-    )
+  }
+
+  const onBlur = (e: any) => {
+    if (Number(value1) && Number(value2))
+      dispatch(
+        updateCoords({
+          key: record.key,
+          point: point,
+          coords: [Number(value1), Number(value2)],
+        }),
+      )
+  }
+
+  const handleEnterPress = (e: any) => {
+    if (e.keyCode === 13) {
+      console.log("enter")
+      e.target.blur()
+    }
   }
 
   return (
@@ -40,11 +51,15 @@ export const CoordinatesInput: React.FC<InputProps> = ({
         style={{ width: 120 }}
         value={String(value1)}
         onChange={(number) => setInput(number, setValue1)}
+        onBlur={onBlur}
+        onKeyDown={(e: any) => handleEnterPress(e)}
         placeholder="Введите долготу"
       />
       <NumericInput
         style={{ width: 120 }}
         value={String(value2)}
+        onBlur={onBlur}
+        onKeyDown={(e: any) => handleEnterPress(e)}
         onChange={setValue2}
         placeholder="Введите широту"
       />

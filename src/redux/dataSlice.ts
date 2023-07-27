@@ -47,15 +47,6 @@ const initialState: DataState = {
   routeCoords: [],
 }
 
-// export const incrementAsync = createAsyncThunk(
-//   "counter/fetchCount",
-//   async (amount: number) => {
-//     const response = await fetchCount(amount)
-//     // The value we return becomes the `fulfilled` action payload
-//     return response.data
-//   },
-// )
-
 export const dataSlice = createSlice({
   name: "data",
   initialState,
@@ -116,21 +107,10 @@ export const dataSlice = createSlice({
       state.routeCoords = payload
       state.status = "idle"
     },
+    setFetchFailure(state) {
+      state.status = "failed"
+    },
   },
-
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(incrementAsync.pending, (state) => {
-  //       state.status = "loading"
-  //     })
-  //     .addCase(incrementAsync.fulfilled, (state, action) => {
-  //       state.status = "idle"
-  //       state.value += action.payload
-  //     })
-  //     .addCase(incrementAsync.rejected, (state) => {
-  //       state.status = "failed"
-  //     })
-  // },
 })
 
 export const {
@@ -141,17 +121,9 @@ export const {
   updateCoords,
   getAPIRoute,
   setAPIRoute,
+  setFetchFailure,
 } = dataSlice.actions
 
 export const selectData = (state: RootState) => state.data
-
-// export const incrementIfOdd =
-//   (amount: number): AppThunk =>
-//   (dispatch, getState) => {
-//     const currentValue = selectCount(getState())
-//     if (currentValue % 2 === 1) {
-//       dispatch(incrementByAmount(amount))
-//     }
-//   }
 
 export default dataSlice.reducer

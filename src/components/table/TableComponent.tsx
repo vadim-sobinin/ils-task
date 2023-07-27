@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
 import type { InputRef } from "antd"
-import { Button, Form, Input, Popconfirm, Space, Table } from "antd"
+import { Button, Form, Input, Popconfirm, Table } from "antd"
 import type { FormInstance } from "antd/es/form"
 
 import "../../scss/Table.scss"
-import { RowSelectionType, TableRowSelection } from "antd/es/table/interface"
+import { TableRowSelection } from "antd/es/table/interface"
 import { AnyObject } from "antd/es/_util/type"
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
-import { RootState } from "../../redux/store"
+
 import {
   addRoute,
   deleteRoute,

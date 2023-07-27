@@ -14,8 +14,6 @@ function App() {
           <Map />
         </Col>
       </Row>
-
-      <h1>Hello</h1>
     </div>
   )
 }

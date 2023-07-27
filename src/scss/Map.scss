@@ -1,3 +1,17 @@
 .leaflet-container {
-  height: 100vh;
+  height: calc(100vh - 40px);
+}
+
+.message-container {
+  z-index: 1000;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-text {
+  z-index: 1001;
+  font-size: 20px;
+  color: red;
 }

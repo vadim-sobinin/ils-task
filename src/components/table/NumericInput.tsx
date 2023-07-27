@@ -6,12 +6,21 @@ interface NumericInputProps {
   onChange: (value: string) => void
   placeholder: string
   tooltipText?: string
+  onBlur: (e: any) => void
+  onKeyDown: (e: any) => void
 }
 
 const formatNumber = (value: number) => new Intl.NumberFormat().format(value)
 
 export const NumericInput = (props: NumericInputProps) => {
-  const { value, onChange, placeholder, tooltipText = "" } = props
+  const {
+    value,
+    onChange,
+    placeholder,
+    onBlur,
+    onKeyDown,
+    tooltipText = "",
+  } = props
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: inputValue } = e.target
@@ -19,15 +28,6 @@ export const NumericInput = (props: NumericInputProps) => {
     if (reg.test(inputValue) || inputValue === "" || inputValue === "-") {
       onChange(inputValue)
     }
-  }
-
-  // '.' at the end or only '-' in the input box.
-  const handleBlur = () => {
-    let valueTemp = value
-    if (value.charAt(value.length - 1) === "." || value === "-") {
-      valueTemp = value.slice(0, -1)
-    }
-    onChange(valueTemp.replace(/0*(\d+)/, "$1"))
   }
 
   const title = value ? "" : tooltipText
@@ -42,7 +42,8 @@ export const NumericInput = (props: NumericInputProps) => {
       <Input
         {...props}
         onChange={handleChange}
-        onBlur={handleBlur}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
         placeholder={placeholder}
         maxLength={16}
       />

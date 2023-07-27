@@ -13,13 +13,13 @@ import {
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
 import { getAPIRoute, selectData } from "../../redux/dataSlice"
 import { LatLngTuple } from "leaflet"
+import ClipLoader from "react-spinners/ClipLoader"
 
 const Map = () => {
   const { dataSource, selectedRoute, routeCoords, status } =
     useAppSelector(selectData)
 
   const dispatch = useAppDispatch()
-
   const getCoords = async () => {
     if (selectedRoute) {
       dispatch(
@@ -42,7 +42,6 @@ const Map = () => {
 
   function ResetCenterView() {
     const map = useMap()
-
     selectedRoute &&
       map.fitBounds([
         selectedRoute?.point1,
@@ -55,14 +54,14 @@ const Map = () => {
   return (
     <MapContainer
       center={mapCenterCoords ? mapCenterCoords : dataSource[0].point1}
-      zoom={13}
+      zoom={9}
       scrollWheelZoom={false}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {selectedRoute && (
+      {selectedRoute && status !== "failed" && (
         <>
           <Marker position={selectedRoute.point1}>
             <Popup>Первая метка</Popup>
@@ -85,6 +84,27 @@ const Map = () => {
         </>
       )}
       <ResetCenterView />
+
+      {status !== "idle" && (
+        <div className="message-container">
+          {status === "loading" && (
+            <ClipLoader
+              color="#36d7b7"
+              loading={true}
+              size={150}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          )}
+
+          {status === "failed" && (
+            <p className="error-text">
+              Произошла ошибка при загрузке данных... <br />
+              Пожалуйста, проверьте соедениние с интернетом
+            </p>
+          )}
+        </div>
+      )}
     </MapContainer>
   )
 }

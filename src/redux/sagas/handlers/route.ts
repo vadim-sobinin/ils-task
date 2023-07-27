@@ -1,5 +1,5 @@
 import { call, put } from "redux-saga/effects"
-import { setAPIRoute } from "../../dataSlice"
+import { setAPIRoute, setFetchFailure } from "../../dataSlice"
 import { getRouteFromAPI } from "../../../servises/osrm"
 import { LatLngTuple } from "leaflet"
 
@@ -13,7 +13,8 @@ export function* handleGetRoute({
     const response2 = yield call(getRouteFromAPI, payload[1])
 
     yield put(setAPIRoute([response1, response2]))
-  } catch (error) {
-    console.log(error)
+  } catch (error: any) {
+    yield put(setFetchFailure())
+    console.log("Fetch error ", error.message)
   }
 }
